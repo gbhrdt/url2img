@@ -1,11 +1,15 @@
 $(window).load(function() {
 
     $('img[data-url]').each(function() {
-        img = this;
-        url = $(this).data('url');
-        $.getJSON('https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=' + url + '&screenshot=true', function(data) {
-            data = data.screenshot.data.replace(/_/g, '/').replace(/-/g, '+');
-            img.src = 'data:image/jpeg;base64,' + data;
+        $.ajax({
+        	url: 'https://www.googleapis.com/pagespeedonline/v1/runPagespeed?url=' + $(this).data('url') + '&screenshot=true',
+        	context: this,
+        	type: 'GET',
+        	dataType: 'json',
+        	success: function(data) {
+           		data = data.screenshot.data.replace(/_/g, '/').replace(/-/g, '+');
+            	$(this).attr('src', 'data:image/jpeg;base64,' + data);
+            }
         });
     });
 
